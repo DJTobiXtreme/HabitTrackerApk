@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeParent">
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Habit Name"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:id="@+id/txtHabitName">
+
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtHabitName"
+            android:id="@+id/relative">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/btnDelete"
+                android:text="Delete">
+
+            </Button>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/layoutPieChart"
+                android:layout_weight="7">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/pieChart">
+                </com.github.mikephil.charting.charts.PieChart>
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+
+                <Button
+                    android:id="@+id/btnRed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Red"
+                    android:layout_centerHorizontal="true">
+                </Button>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Blue"
+                    android:layout_below="@+id/btnRed"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/btnBlue">
+                </Button>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Green"
+                    android:layout_below="@+id/btnBlue"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/btnGreen">
+                </Button>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+</com.google.android.material.card.MaterialCardView>
