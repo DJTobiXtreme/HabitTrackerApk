@@ -1,13 +1,17 @@
 package com.example.habittracker;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.strictmode.SqliteObjectLeakedViolation;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
+
 
 import androidx.annotation.Nullable;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +24,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_HABIT_RED = "HABIT_RED";
     public static final String COLUMN_HABIT_BLUE = "HABIT_BLUE";
     public static final String COLUMN_HABIT_GREEN = "HABIT_GREEN";
+    public static final String COLUMN_HABIT_DATE = "HABIT_DATE";
     public static final String COLUMN_ID = "ID";
+
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, "habits.db", null, 1);
@@ -28,7 +34,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableStatement = "CREATE TABLE " + HABIT_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_HABIT_NAME + " TEXT, " + COLUMN_HABIT_RED + " INT, " + COLUMN_HABIT_BLUE + " INT, " + COLUMN_HABIT_GREEN + " INT)";
+        String createTableStatement = "CREATE TABLE " + HABIT_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_HABIT_NAME + " TEXT, " + COLUMN_HABIT_RED + " INT, " + COLUMN_HABIT_BLUE + " INT, " + COLUMN_HABIT_GREEN + " INT, " + COLUMN_HABIT_DATE + " INT)";
 
         db.execSQL(createTableStatement);
 
@@ -39,25 +45,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean updateCounter(int id, int option, int number){
+    public boolean updateCounter(int id, int option, int number) {
         String queryString;
         SQLiteDatabase db;
+        Calendar calendar = Calendar.getInstance();
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat("ddMM");
+        String date = formatter.format(calendar.getTime());
 
-        switch (option){
+        switch (option) {
             case 0:
-                queryString = "UPDATE " + HABIT_TABLE + " SET " + COLUMN_HABIT_RED + " = " + number + " WHERE " + COLUMN_ID + " = '" + id + "'";
+                queryString = "UPDATE " + HABIT_TABLE + " SET " + COLUMN_HABIT_RED + " = " + number + ", " + COLUMN_HABIT_DATE + " = " + date + " WHERE " + COLUMN_ID + " = '" + id + "'";
                 db = this.getWritableDatabase();
                 db.execSQL(queryString);
                 db.close();
                 break;
             case 1:
-                queryString = "UPDATE " + HABIT_TABLE + " SET " + COLUMN_HABIT_BLUE + " = " + number + " WHERE " + COLUMN_ID + " = '" + id + "'";
+                queryString = "UPDATE " + HABIT_TABLE + " SET " + COLUMN_HABIT_BLUE + " = " + number + ", " + COLUMN_HABIT_DATE + " = " + date + " WHERE " + COLUMN_ID + " = '" + id + "'";
                 db = this.getWritableDatabase();
                 db.execSQL(queryString);
                 db.close();
                 break;
             case 2:
-                queryString = "UPDATE " + HABIT_TABLE + " SET " + COLUMN_HABIT_GREEN + " = " + number + " WHERE " + COLUMN_ID + " = '" + id + "'";
+                queryString = "UPDATE " + HABIT_TABLE + " SET " + COLUMN_HABIT_GREEN + " = " + number + ", " + COLUMN_HABIT_DATE + " = " + date + " WHERE " + COLUMN_ID + " = '" + id + "'";
                 db = this.getWritableDatabase();
                 db.execSQL(queryString);
                 db.close();
@@ -74,7 +83,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             cv.put(COLUMN_HABIT_NAME, habit.getName());
             cv.put(COLUMN_HABIT_RED, habit.getRed());
             cv.put(COLUMN_HABIT_BLUE, habit.getBlue());
-            cv.put(COLUMN_HABIT_GREEN, habit.getGreen());
+        cv.put(COLUMN_HABIT_GREEN, habit.getGreen());
+        cv.put(COLUMN_HABIT_DATE, habit.getLastHabitDate());
             long insert = db.insert(HABIT_TABLE, null, cv);
             db.close();
         return true;
@@ -103,8 +113,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 int habitRed = cursor.getInt(2);
                 int habitBlue = cursor.getInt(3);
                 int habitGreen = cursor.getInt(4);
+                int habitDate = cursor.getInt(5);
 
-                Habit habitToAdd = new Habit(habitID, habitName, habitRed, habitBlue, habitGreen);
+                Habit habitToAdd = new Habit(habitID, habitName, habitRed, habitBlue, habitGreen, habitDate);
                 returnList.add(habitToAdd);
 
             } while (cursor.moveToNext());

@@ -3,6 +3,8 @@ package com.example.habittracker;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class Habit implements Parcelable {
     private int id;
     private String name;
@@ -10,12 +12,15 @@ public class Habit implements Parcelable {
     private int blue;
     private int red;
 
-    public Habit(int id, String name, int red, int blue, int green) {
+    private int lastHabitDate;
+
+    public Habit(int id, String name, int red, int blue, int green, int lastHabitDate) {
         this.id = id;
         this.name = name;
         this.red = red;
         this.blue = blue;
         this.green = green;
+        this.lastHabitDate = lastHabitDate;
     }
 
     protected Habit(Parcel in) {
@@ -70,6 +75,14 @@ public class Habit implements Parcelable {
         this.red = red;
     }
 
+    public int getLastHabitDate() {
+        return lastHabitDate;
+    }
+
+    public void setLastHabitDate(int lastHabitDate) {
+        this.lastHabitDate = lastHabitDate;
+    }
+
     public int getId() {
         return id;
     }
@@ -102,4 +115,6 @@ public class Habit implements Parcelable {
         parcel.writeInt(blue);
         parcel.writeInt(red);
     }
+
+
 }

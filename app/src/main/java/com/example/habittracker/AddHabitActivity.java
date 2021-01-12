@@ -31,7 +31,7 @@ public class AddHabitActivity extends AppCompatActivity {
             public void onClick(View view) {
                 idCounter++;
                 Intent intent = new Intent(AddHabitActivity.this, MainActivity.class);
-                Habit habit = new Habit(0, edtTxtHabitName.getText().toString(), 0, 0, 0);
+                Habit habit = new Habit(0, edtTxtHabitName.getText().toString(), 0, 0, 0, 0);
                 dataBaseHelper.addOne(habit);
                 startActivity(intent);
             }

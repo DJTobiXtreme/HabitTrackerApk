@@ -1,5 +1,6 @@
 package com.example.habittracker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import android.graphics.Color;
@@ -33,7 +34,9 @@ public class HabitsRecWiewAdapter extends RecyclerView.Adapter<HabitsRecWiewAdap
     private DataBaseHelper dataBaseHelper;
     private RecyclerViewClickInterface recyclerViewClickInterface;
 
-    public HabitsRecWiewAdapter (RecyclerViewClickInterface recyclerViewClickInterface){
+    public int option;
+
+    public HabitsRecWiewAdapter(RecyclerViewClickInterface recyclerViewClickInterface) {
         this.recyclerViewClickInterface = recyclerViewClickInterface;
     }
 
@@ -44,17 +47,28 @@ public class HabitsRecWiewAdapter extends RecyclerView.Adapter<HabitsRecWiewAdap
         return new ViewHolder(view);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.txtHabitName.setText(habits.get(position).getName());
+
+        int date = habits.get(position).getLastHabitDate();
+        System.out.println(date);
+        int day = date / 100;
+        int month = date - day * 100;
+        System.out.println(month);
+        String dateToDisplay = day + "-" + month;
+
+        holder.txtDate.setText(dateToDisplay);
         //context = MainActivity.this;
         dataBaseHelper = new DataBaseHelper(context);
+
 
         holder.btnDelete.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 dataBaseHelper.deleteOne(habits.get(position).getId());
-                Toast.makeText(context , "Deleted: " +  habits.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Deleted: " + habits.get(position).getName(), Toast.LENGTH_SHORT).show();
                 recyclerViewClickInterface.onLongItemClick(position);
                 return true;
             }
@@ -66,6 +80,7 @@ public class HabitsRecWiewAdapter extends RecyclerView.Adapter<HabitsRecWiewAdap
             public void onClick(View view) {
                 dataBaseHelper.updateCounter(habits.get(position).getId(), 0, habits.get(position).getRed()+1);
                 recyclerViewClickInterface.onItemClick(position);
+                option = 0;
             }
         });
 
@@ -74,14 +89,42 @@ public class HabitsRecWiewAdapter extends RecyclerView.Adapter<HabitsRecWiewAdap
             public void onClick(View view) {
                 dataBaseHelper.updateCounter(habits.get(position).getId(), 1, habits.get(position).getBlue()+1);
                 recyclerViewClickInterface.onItemClick(position);
+                option = 1;
             }
         });
 
         holder.btnGreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dataBaseHelper.updateCounter(habits.get(position).getId(), 2, habits.get(position).getGreen()+1);
+                dataBaseHelper.updateCounter(habits.get(position).getId(), 2, habits.get(position).getGreen() + 1);
                 recyclerViewClickInterface.onItemClick(position);
+                option = 2;
+            }
+        });
+
+        holder.btnUndo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (option) {
+                    case 0:
+                        dataBaseHelper.updateCounter(habits.get(position).getId(), 0, habits.get(position).getRed() - 1);
+                        recyclerViewClickInterface.onItemClick(position);
+                        option = 3;
+                        break;
+                    case 1:
+                        dataBaseHelper.updateCounter(habits.get(position).getId(), 1, habits.get(position).getBlue() - 1);
+                        recyclerViewClickInterface.onItemClick(position);
+                        option = 3;
+                        break;
+                    case 2:
+                        dataBaseHelper.updateCounter(habits.get(position).getId(), 2, habits.get(position).getGreen() - 1);
+                        recyclerViewClickInterface.onItemClick(position);
+                        option = 3;
+                        break;
+                    case 3:
+                        Toast.makeText(context, "You already undo this habit", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         });
 
@@ -111,8 +154,9 @@ public class HabitsRecWiewAdapter extends RecyclerView.Adapter<HabitsRecWiewAdap
         holder.pieChart.getDescription().setEnabled(false);
         Legend l = holder.pieChart.getLegend();
         l.setEnabled(false);
-        //holder.pieChart.setData(pieData);
+
     }
+
 
     @Override
     public int getItemCount() {
@@ -124,10 +168,10 @@ public class HabitsRecWiewAdapter extends RecyclerView.Adapter<HabitsRecWiewAdap
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private CardView parent;
-        private TextView txtHabitName;
-        private Button btnRed, btnBlue, btnGreen, btnDelete;
+        private TextView txtHabitName, txtDate;
+        private Button btnRed, btnBlue, btnGreen, btnDelete, btnUndo;
         //Chart
         private PieChart pieChart;
 
@@ -135,7 +179,9 @@ public class HabitsRecWiewAdapter extends RecyclerView.Adapter<HabitsRecWiewAdap
             super(itemView);
             parent = itemView.findViewById(R.id.parent);
             btnDelete = itemView.findViewById(R.id.btnDelete);
+            btnUndo = itemView.findViewById(R.id.btnUndo);
             txtHabitName = itemView.findViewById(R.id.txtHabitName);
+            txtDate = itemView.findViewById(R.id.txtDate);
             btnRed = itemView.findViewById(R.id.btnRed);
             btnBlue = itemView.findViewById(R.id.btnBlue);
             btnGreen = itemView.findViewById(R.id.btnGreen);

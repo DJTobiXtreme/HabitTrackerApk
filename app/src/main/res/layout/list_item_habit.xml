@@ -27,14 +27,49 @@
             android:layout_below="@+id/txtHabitName"
             android:id="@+id/relative">
 
-            <Button
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/btnDelete"
-                android:text="Delete">
+                android:layout_height="wrap_content">
 
-            </Button>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/btnDelete"
+                    android:text="Delete">
+
+                </Button>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Undo"
+                    android:layout_below="@+id/btnDelete"
+                    android:id="@+id/btnUndo">
+
+                </Button>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btnUndo"
+                    android:text="99-99"
+                    android:textSize="28dp"
+                    android:id="@+id/txtDate"
+                    android:layout_centerInParent="true">
+
+                </TextView>
+
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+            </TextView>
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
